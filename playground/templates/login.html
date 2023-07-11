@@ -1,0 +1,126 @@
+<style>
+    body {
+        background-image: url('/static/images/background.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+      
+    }
+    title{
+    font-size:60px;
+    line-height: 70px;
+     color: #001272;
+     font-family: Poly;
+     font-size: 60px;
+     font-style: normal;
+     font-weight: 400;
+     line-height: normal;
+    }
+    .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height:600px;
+    flex-shrink: 0;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #dddddd;
+    border-radius: 40px 40px 40px 40px;
+    background-color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    h3 {
+        font-size: 25px;
+        color: #5E5E5E;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 400;
+    }
+    
+    input[type="text"],
+    input[type="password"] {
+        padding :5%;
+        width: 400px;
+        height: 70px;
+        flex-shrink: 0;
+        border-radius: 40px;
+        border: 1px solid #000;
+        background: #FFF;
+        font-size: 25px;
+        color: #000000;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 400;
+        
+    }
+    
+    input[type="submit"] {
+      margin-top: 30px;
+      margin-bottom: 30px;
+        color: #FFF;
+        font-family: Koh Santepheap;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 38px;
+        display: flex;
+        width: 400;
+        height: 70px;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        border-radius: 40px;
+        background: #001272;
+    }
+    
+    input[type="submit"]:hover {
+      background-color: #313967;
+    }
+
+    a{
+      gap: 10px;
+      margin-left: 20%;
+        line-height: 35px;
+        color: #7FA5BB;
+        font-family: Poppins;
+        font-size: 23px;
+        font-style: normal;
+        font-weight: 400;
+    }
+  .icon img {
+    flex-shrink: 0;
+    max-width: 80px; /* Adjust the size as needed */
+    height: auto;
+  }
+
+
+  </style>
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <div class="container">
+    <span class="icon">
+      {% load static %}
+      <img src="{% static '../static/images/Poste_Maroc_logo.png' %}" alt="logo">
+     </span>
+    <form method="post">
+      {% csrf_token %} 
+     <h3>Nom d'utilisateur</h3>
+      <input type="text" name="username" required>
+      <h3>Mot de Passe</h3>
+      <input type="password" name="password" required>
+      <input type="submit" value="Se Connecter">
+      <a href="#">Mot de Passe oublié ?</a>
+    </form>
+  </div>
+</body>
+</html>
