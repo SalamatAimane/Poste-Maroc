@@ -20,8 +20,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 600px;
-    height:600px;
+    width: 550px;
+    height:550px;
     flex-shrink: 0;
     margin: 0 auto;
     padding: 20px;
@@ -39,8 +39,7 @@
         font-weight: 400;
     }
     
-    input[type="text"],
-    input[type="password"] {
+.user {
         padding :5%;
         width: 400px;
         height: 70px;
@@ -95,6 +94,14 @@
     height: auto;
   }
 
+  .error{
+    flex-shrink: 0;
+    font-size: 25px;
+    color: #692727;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+  }
 
   </style>
 
@@ -112,14 +119,16 @@
       {% load static %}
       <img src="{% static '../static/images/Poste_Maroc_logo.png' %}" alt="logo">
      </span>
-    <form method="post">
+    <form method="post" action="{% url 'LoginPage' %}">
       {% csrf_token %} 
      <h3>Nom d'utilisateur</h3>
-      <input type="text" name="username" required>
+      <input type="text" class="user" name="username" required>
       <h3>Mot de Passe</h3>
-      <input type="password" name="password" required>
+      <input type="password" class="user" name="password" required>
       <input type="submit" value="Se Connecter">
-      <a href="#">Mot de Passe oublié ?</a>
+      {% if error_message %}
+      <p type="text" class="error">{{ error_message }}</p>
+      {% endif %}
     </form>
   </div>
 </body>

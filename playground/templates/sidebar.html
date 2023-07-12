@@ -164,14 +164,31 @@
         }
 
 .info-user{
+    display: grid;
+    grid-template-columns: 60% auto ;
+    column-gap: 10px;
     position: absolute; 
     top: 0;
     right: 0;}
+    .user-icon{
+        display: flex;
+        flex-direction:row;
+    }
 
     .icon-user img{
         margin-top: 10px;
         width:30px;
         height: 30px;
+    }
+
+    .user-username{
+        width: 150px;
+    }
+
+    .user-panier{
+        display: flex;
+        flex-direction:row;
+        gap:10px;
     }
 input [type=text]
 { 
@@ -199,19 +216,25 @@ input [type=number]
 </head>
 <body>
        <div class="info-user">
-        <span class="icon-user">
-            {% load static %}
-            <img src="{% static '../static/images/user.png' %}" alt="user">
-        </span>
-        <input type="text" name="matricule"  readonly>
-        <input type="text" name="profile"  readonly>
+        <div class="user-icon">
+            <span class="icon-user">
+                {% load static %}
+                <img src="{% static '../static/images/user.png' %}" alt="user">
+            </span> 
+            <div class="user-username">
+                <input type="text" name="matricule"  readonly>
+                <input type="text" name="profile"  readonly>
+            </div>
+        </div>
+
+    <div class="user-panier">
         <span class="icon-user">
             {% load static %}
             <img src="{% static '../static/images/paniers.png' %}" alt="user">
         </span>
         <input type="number" name="panier" readonly>
     </div>
-
+</div>
     <div class="navigation">
         <ul>
             <div class="navigation-header">

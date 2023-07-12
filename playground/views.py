@@ -1,30 +1,32 @@
 from django.http import HttpResponse
 from django.shortcuts import render,HttpResponse,redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
-
-@login_required(login_url='login')
-
-def Compte(request):
-    return render (request,'compte.html')
+from .models import Ville
+from .models import Agence
+from .models import Agent
+from .models import Colis
+from .models import Courrier
+from .models import BoitePostale
+from .models import Reexpedition
+from .models import Activite
+from .models import Expediteur
+from .models import Panier
+from .models import PrixBoiteReexpedition
+from .models import PrixColisCourrier
+from .models import Recu
 
 def LoginPage(request):
-    context = {
-        'image_url': '../static/images/Poste_Maroc_logo.png',
-     }
-    if request.method=='POST':
-        username=request.POST.get('username')
-        pass1=request.POST.get('password')
-        user=authenticate(request,username=username,password=pass1)
-        if user is not None:
-            login(request,user)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        agent=Agent.objects.filter(matricule=username,password=password)
+        if agent is not None:
+            login(request,agent)
             return redirect('compte')
         else:
-            return HttpResponse ("<b style='font-family:Poppins;  position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);font-size:30px;color:#001272;'>Matricule ou Mot de passe incorrect!!!</b>")
-    return render (request,'login.html')
-
-
+            error_message = "<b style='font-family:Poppins;  position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);font-size:20px;color:#001272;'>Matricule ou Mot de passe incorrect!!!</b>"
+            return render(request, 'login.html', {'error_message': error_message})
 
 def LogoutPage(request):
     logout(request)
@@ -35,3 +37,9 @@ def sidebar(request):
         'image_url': '../static/images/Poste_Maroc_logo.png',
     }
     return render(request, 'sideBar.html')
+
+def loginPage(req) :
+    return render(req, 'login.html')
+
+def compte(request):
+    return render(request,'compte.html')
