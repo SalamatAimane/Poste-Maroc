@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import EmailValidator
 from django.utils import timezone
+from django.db.models import Max
 
 
 class Ville(models.Model):
@@ -26,18 +27,36 @@ class Activite(models.Model):
     type_activite = models.CharField(max_length=100, primary_key=True)
     compteur = models.IntegerField()
 
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Check if the object is being created
+            # Get the maximum compteur value for records with the same type_activite
+            max_compteur = Activite.objects.filter(type_activite=self.type_activite).aggregate(models.Max('compteur'))['compteur__max']
+            self.compteur = max_compteur + 1 if max_compteur is not None else 1
+
+        super().save(*args, **kwargs)
+
+
 class Expediteur(models.Model):
-    num_expediteur = models.CharField(max_length=10, primary_key=True)
+    num_expediteur = models.AutoField(primary_key=True)
     type_expediteur = models.CharField(max_length=100)
 
 class Panier(models.Model):
-    num_Panier = models.IntegerField( primary_key=True)
+    num_Panier = models.AutoField( primary_key=True)
     num_agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     prix_ht = models.DecimalField(max_digits=8, decimal_places=2)
     prix_ttc = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=100)
     tva = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True) #date system
+    
+    def save(self, *args, **kwargs):
+        if not self.num_Panier:  # Generate auto-incremented value only if it's not set
+            last_panier = Panier.objects.order_by('-num_Panier').first()
+            if last_panier:
+                self.num_Panier = last_panier.num_Panier + 1
+            else:
+                self.num_Panier = 1
+        super().save(*args, **kwargs)
 
 class Recu(models.Model):
     num_recu = models.IntegerField(primary_key=True)
@@ -104,6 +123,7 @@ class BoitePostale(models.Model):
         super(Reexpedition, self).save(*args, **kwargs)
 
 class PrixColisCourrier(models.Model):
+    custom_id = models.CharField(max_length=10, primary_key=True, default=1)
     poids_inf = models.DecimalField(max_digits=5, decimal_places=3)
     poids_sup = models.DecimalField(max_digits=5, decimal_places=3)
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
@@ -137,6 +157,16 @@ class Colis(models.Model):
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
+        if not self.num_colis:  # Check if the object is being created
+            activite = self.type_activite
+            num_activite = activite.num_activite
+
+            # Get the maximum compteur value for records with the same num_activite
+            max_compteur = Colis.objects.filter(type_activite_num_activite=num_activite).aggregate(Max('compteur'))['compteur_max']
+            compteur = max_compteur + 1 if max_compteur is not None else 1
+
+            self.num_colis = f"{num_activite}{compteur:03d}MA"
+        # Update the code_postale based on nom_ville
         ville = Ville.objects.get(nom_ville=self.nom_ville)
         self.code_postale = ville.code_postale
         super(Reexpedition, self).save(*args, **kwargs)
@@ -160,11 +190,16 @@ class Courrier(models.Model):
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
+        if not self.num_courrier:  # Check if the object is being created
+            activite = self.type_activite
+            num_activite = activite.num_activite
+
+            # Get the maximum compteur value for records with the same num_activite
+            max_compteur = Colis.objects.filter(type_activite_num_activite=num_activite).aggregate(Max('compteur'))['compteur_max']
+            compteur = max_compteur + 1 if max_compteur is not None else 1
+
+            self.num_colis = f"{num_activite}{compteur:03d}MA"
+        # Update the code_postale based on nom_ville
         ville = Ville.objects.get(nom_ville=self.nom_ville)
         self.code_postale = ville.code_postale
         super(Reexpedition, self).save(*args, **kwargs)
-
-
-
-
-
