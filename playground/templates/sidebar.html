@@ -27,11 +27,13 @@
         body {
         min-height: 100vh;
         overflow-x: hidden;
+        background-color: #CECECE;
         }
 
         .container {
         position: relative;
         width: 100%;
+        background-color: #CECECE;
         }
 
         /* =============== Navigation ================ */
@@ -41,7 +43,6 @@
         height: 100%;
         background: var(--blue);
         border-left: 10px solid var(--blue);
-      
         transition: 0.5s;
         overflow: hidden;
         }
@@ -146,7 +147,7 @@
         height: 50px;
         background-color: transparent;
         border-radius: 50%;
-        box-shadow: 35px 35px 0 10px var(--white);
+        box-shadow: 35px 35px 0 10px var(--black2);
         pointer-events: none;
         }
         .navigation ul li:hover a::after,
@@ -159,7 +160,7 @@
         height: 50px;
         background-color: transparent;
         border-radius: 50%;
-        box-shadow: 35px -35px 0 10px var(--white);
+        box-shadow: 35px -35px 0 10px var(--black2);
         pointer-events: none;
         }
 
@@ -170,60 +171,53 @@
     position: absolute; 
     top: 0;
     right: 0;}
-    .user-icon{
+.user-icon{
         display: flex;
         flex-direction:row;
     }
 
-    .icon-user img{
+.icon-user img{
         margin-top: 10px;
-        width:30px;
-        height: 30px;
+        width:55px;
+        height: 55px;
     }
 
-    .user-username{
-        width: 150px;
+.user-username
+{
+    width: 150px;
     }
 
-    .user-panier{
+.user-panier
+{
         display: flex;
         flex-direction:row;
         gap:10px;
-    }
-input [type=text]
-{ 
-    font-size: 25px;
-    color: #000000;
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 400;
-    border: 0px;
 }
+
 
 input [type=number]
 { 
     font-size: 25px;
-    color: #000000;
     font-family: Poppins;
     font-style: normal;
-    font-weight: 400;
-    border: 0px;
     block-size: 4px;
+    text-align: center;
 }
 
 
     </style>
 </head>
 <body>
-       <div class="info-user">
+<div class="info-user">
         <div class="user-icon">
             <span class="icon-user">
                 {% load static %}
                 <img src="{% static '../static/images/user.png' %}" alt="user">
             </span> 
             <div class="user-username">
-                <input type="text" name="matricule"  readonly>
-                <input type="text" name="profile"  readonly>
+                <h1 style="font-family: Poppins;font-size:15px;text-align: center;">{{ matricule }}</h1>
+                <h1 style="font-family: Poppins; font-size:15px;text-align: center; ">{{ profile }}</h1>
+                <h1 style="font-family: Poppins; font-size:15px;text-align: center; ">Agence : {{ nom_agence }}</h1>
             </div>
         </div>
 
@@ -232,7 +226,7 @@ input [type=number]
             {% load static %}
             <img src="{% static '../static/images/paniers.png' %}" alt="user">
         </span>
-        <input type="number" name="panier" readonly>
+        <h1 style="font-family: Poppins; color:var(--blue); ">1</h1>
     </div>
 </div>
     <div class="navigation">
@@ -312,5 +306,6 @@ input [type=number]
            
         </ul>
     </div>
+
 </body>
 </html>

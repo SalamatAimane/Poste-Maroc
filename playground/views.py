@@ -1,44 +1,58 @@
-from django.http import HttpResponse
-from django.shortcuts import render,HttpResponse,redirect
-from django.contrib.auth import login,logout
-from django.contrib.auth.decorators import login_required
-from .models import Ville
-from .models import Agence
+from django.shortcuts import render,redirect
 from . import models
-from .models import Colis
-from .models import Courrier
-from .models import BoitePostale
-from .models import Reexpedition
-from .models import Activite
-from .models import Expediteur
-from .models import Panier
-from .models import PrixBoiteReexpedition
-from .models import PrixColisCourrier
-from .models import Recu
-
 
 def LoginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         agent=models.Agent.objects.filter(matricule=username,password=password).first()
+        agence=models.Agence.objects.filter(num_agence=agent.num_agence_id).first()
         if agent is not None:
+            request.session['matricule'] = agent.matricule 
+            request.session['nom_complet'] = agent.nom_complet
+            request.session['password'] = agent.password
+            request.session['status'] = agent.status
+            request.session['profile'] = agent.profile
+            request.session['num_agence_id'] = agent.num_agence_id
+            request.session['nom_agence']=agence.nom_agence
             return redirect('compte')
         else:
             error_message = "Matricule ou Mot de passe incorrect!!!"
             return render(request, 'login.html', {'error_message': error_message})
 
+
 def LogoutPage(request):
-    return redirect('login')
+    return redirect('Login')
 
-def sidebar(request):
-    context = {
-        'image_url': '../static/images/Poste_Maroc_logo.png',
-    }
-    return render(request, 'sideBar.html')
-
-def loginPage(req) :
-    return render(req, 'login.html')
+def Login(request) :
+    return render(request, 'login.html')
 
 def compte(request):
-    return render(request,'compte.html')
+    matricule = request.session.get('matricule')
+    nom_complet= request.session.get('nom_complet')
+    password= request.session.get('password')
+    status= request.session.get('status')
+    profile= request.session.get('profile')
+    nom_agence=request.session.get('nom_agence')
+    context = {
+        'matricule': matricule,
+        'nom_complet': nom_complet,
+        'password': password,
+        'status': status,
+        'profile': profile,
+        'nom_agence': nom_agence
+    }
+
+    return render(request,'compte.html',context)
+
+
+def save(request):
+    password= request.session.get('password')
+    status= request.session.get('status')
+    profile= request.session.get('profile')
+    nom_agence=request.session.get('nom_agence')
+    matricule = request.session.get('matricule')
+    nom= request.POST.get('nom')
+    my_save=models.Agent(matricule=matricule,password=password,nom_complet=nom,status=status,profile=profile,nom_agence=nom_agence)
+    my_save.save()
+    return redirect('compte')
