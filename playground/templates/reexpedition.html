@@ -204,10 +204,98 @@ input [type=number]
     text-align: center;
 }
 
+.main {
+    display:grid;
+    grid-template-columns: 50% 50%;
+    position: absolute;
+    padding: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    top:100px;
+    right: 100px;
+    width: 800px;
+    height: 500px;
+    background-color: #E6E6E6;
+    border-radius: 40px;
+  }
+  
+  .main div {
+    display: flex;
+    align-items:center;
+    margin: 20px;
+  }
+  
+label {
+    font-size: 15px;
+    color:black;
+    font-family: Poppins;
+    font-style: normal;
+    margin: 5px;
+    font-weight: bold;
+  }
+  
+input[type="text"],input[type="email"]  {
+    flex:1;
+    font-size: 15px;
+    color:black;
+    text-align: center;
+    font-family: Poppins;
+    font-style: normal;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--black2);
+    border-radius: 30px;
+  }
+  
+button {
+    font-family: Poppins;
+    font-style: normal;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+ .save{
+    bottom: 34px;;
+    right: 200px;
+    position: absolute;
+    background-color: var(--blue);
+    color:white;
+    border-radius: 30px;
+  }
+  
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+
+.annuler{
+    background-color:var(--black1);
+    color: white;
+    border-radius: 30px;
+    bottom:50px;
+    right: 150px;
+    position: absolute;
+    z-index: 9999;
+  }
+  
+.retour{
+position: absolute; 
+top:20px;
+left: 350px;
+}
+.retour button:hover{
+opacity:0.8;
+}
 
     </style>
 </head>
 <body>
+
 <div class="info-user">
         <div class="user-icon">
             <span class="icon-user">
@@ -283,7 +371,7 @@ input [type=number]
                     </a>
                 </li>
             
-                <li>
+                <li class="compte-hovered">
                     <a href="{% url 'compte' %}">
                         <span class="icon">
                             
@@ -306,6 +394,66 @@ input [type=number]
            
         </ul>
     </div>
+    <form action ="{% url 'welcome' %}">
+    <div class="retour">
+    <button style="background-color:#001272;color:#fff;border-radius: 30px;" type="submit">Retour</button>
+    </div>
+    </form>
+    <form action="{% url 'reexpedition' %}">
+        <button type="submit" class="annuler">Annuler</button>
+    </form>
+    <form method="post" class="main" action="{% url 'reexpedition_save' %}">
+    {% csrf_token %} 
+        <div>
+          <label>Expediteur :  </label>
+          <input type="text" name="type_expediteur"  required>
+        </div>
+        <div>
+        <label>Mois Abonnement :  </label>
+         <input type="text" name="mois_abonnement" required>
+        </div>
+        <div>
+          <label>Ville Expediteur :  </label>
+          <input type="text" name="nom_ville"  required>
+        </div>
+        <div>
+            <label>Prix Abonnement :  </label>
+            <input type="text" value="" readonly>
+          </div>
+          
+      
+        <div>
+          <label>Code Postale :  </label>
+          <input type="text" value=""  readonly>
+        </div>
+      
+        <div>
+            <label>Adresse Nouvelle :  </label>
+            <input type="text" name="adresse_nouvelle" required>
+          </div>
+
+        <div>
+          <label>Adresse Actuelle :  </label>
+          <input type="text"  name="adresse_actuelle" required>
+        </div>
+      
+        <div>
+            <label>Email :  </label>
+            <input type="email" name="email" required>
+          </div>
+  
+        <div>
+          <label>N° GSM :  </label>
+          <input type="text" name="num_tel_exp" required>
+        </div>
+          <div>
+            <label>Piece Identite :  </label>
+            <input type="text" name="piece_identite" required>
+          </div>
+        <div>
+          <button type="submit" class="save" >ajouter au panier</button>
+        </div>
+    </form>
 
 </body>
 </html>

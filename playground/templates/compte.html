@@ -204,6 +204,92 @@ input [type=number]
     text-align: center;
 }
 
+.main {
+    position: absolute;
+    padding: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    top:100px;
+    right: 100px;
+    width: 800px;
+    height: 500px;
+    background-color: #E6E6E6;
+    border-radius: 40px;
+  }
+  
+  form div {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+  }
+  
+label {
+    font-size: 15px;
+    color:black;
+    font-family: Poppins;
+    font-style: normal;
+    flex:1;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+input[type="text"] {
+    font-size: 15px;
+    color:black;
+    text-align: center;
+    font-family: Poppins;
+    font-style: normal;
+    flex:1;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--black2);
+    border-radius: 30px;
+  }
+  
+button {
+    font-family: Poppins;
+    font-style: normal;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+ .save{
+    bottom: 34px;;
+    right: 300px;
+    position: absolute;
+    background-color: #4caf50;
+    color:black;
+    border-radius: 30px;
+  }
+  
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+
+.annuler{
+    background-color: #f44336;
+    color: black;
+    border-radius: 30px;
+    bottom:50px;
+    right: 150px;
+    position: absolute;
+    z-index: 9999;
+  }
+  
+.retour{
+position: absolute; 
+top:20px;
+left: 350px;
+}
+.retour button:hover{
+opacity:0.8;
+}
 
     </style>
 </head>
@@ -263,7 +349,7 @@ input [type=number]
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="{% url 'reexpedition' %}">
                         <span class="icon">
                             
                                 <i class="fa fa-plane" aria-hidden="true"></i>
@@ -284,7 +370,7 @@ input [type=number]
                     </a>
                 </li>
             
-                <li>
+                <li class="compte-hovered">
                     <a href="{% url 'compte' %}">
                         <span class="icon">
                             
@@ -307,79 +393,15 @@ input [type=number]
            
         </ul>
     </div>
-    <style>
-        form {
-            position: absolute;
-            padding: 20px;
-            padding-left: 30px;
-            padding-right: 30px;
-            top:100px;
-            right: 100px;
-            width: 800px;
-            height: 500px;
-            background-color: #E6E6E6;
-            border-radius: 40px;
-          }
-          
-          form div {
-            margin-bottom: 15px;
-          }
-          
-          label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-          }
-          
-          input[type="text"] {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-          }
-          
-          button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            font-size: 14px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-          }
-          
-          button[type="submit"] {
-
-            background-color: #4caf50;
-            color:black;
-            border-radius: 30px;
-          }
-          
-          button[type="button"]:last-child {
-            background-color: #f44336;
-            color: black;
-            border-radius: 30px;
-          }
-          
-          button:hover {
-            opacity: 0.8;
-          }
-
-        
-.retour{
-    position: absolute; 
-      top:30px;
-      left: 350px;
-    }
-    .retour button:hover{
-        opacity:0.8;
-    }
-    
-          
-    </style>
+    <form action ="{% url 'welcome' %}">
     <div class="retour">
-    <button style="background-color:#001272;color:#fff;border-radius: 30px;" type="button" action="{% url 'compte' %}">Retour</button>
+    <button style="background-color:#001272;color:#fff;border-radius: 30px;" type="submit">Retour</button>
     </div>
-    <form method="post"  action="{% url 'save' %}">
+    </form>
+    <form action="{% url 'compte' %}">
+        <button type="submit" class="annuler">Annuler les modifications</button>
+    </form>
+    <form method="post" class="main" action="{% url 'save' %}">
     {% csrf_token %} 
         <div>
           <label for="nom">Nom Complet : </label>
@@ -412,9 +434,9 @@ input [type=number]
           </div>
       
         <div>
-          <button type="submit">Enregistrer les modifications</button>
-          <button type="button" action="{% url 'compte' %}">Annuler les modifications</button>
+          <button type="submit" class="save" >Enregistrer les modifications</button>
         </div>
-      </form>
+    </form>
+
 </body>
 </html>
