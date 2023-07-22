@@ -6,8 +6,8 @@ def LoginPage(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         agent=models.Agent.objects.filter(matricule=username,password=password).first()
-        agence=models.Agence.objects.filter(num_agence=agent.num_agence_id).first()
         if agent is not None:
+            agence=models.Agence.objects.filter(num_agence=agent.num_agence_id).first()
             request.session['matricule'] = agent.matricule 
             request.session['nom_complet'] = agent.nom_complet
             request.session['password'] = agent.password

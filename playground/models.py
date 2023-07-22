@@ -3,7 +3,6 @@ from django.core.validators import EmailValidator
 from django.utils import timezone
 from django.db.models import Max
 
-
 class Ville(models.Model):
     code_postale = models.IntegerField(primary_key=True)
     nom_ville = models.CharField(max_length=50)
@@ -64,7 +63,7 @@ class Recu(models.Model):
 
 class PrixBoiteReexpedition(models.Model):
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
-    mois_abonnement = models.CharField(max_length=10)
+    mois_abonnement = models.CharField(max_length=10, default=None)
     type_expediteur = models.ForeignKey(Expediteur, on_delete=models.CASCADE)
     prix = models.DecimalField(max_digits=8, decimal_places=3)
 
