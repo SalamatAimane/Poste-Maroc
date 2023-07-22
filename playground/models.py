@@ -6,11 +6,15 @@ from django.db.models import Max
 class Ville(models.Model):
     code_postale = models.IntegerField(primary_key=True)
     nom_ville = models.CharField(max_length=50)
+    def __str__(self):
+        return f"{self.nom_ville}"
 
 class Agence(models.Model):
     num_agence = models.CharField(max_length=10, primary_key=True)
     nom_agence = models.CharField(max_length=50)
     code_postal = models.ForeignKey(Ville, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.nom_agence}"
 
     
 class Agent(models.Model):
@@ -20,6 +24,8 @@ class Agent(models.Model):
     status = models.CharField(max_length=100)
     profile = models.CharField(max_length=100)
     num_agence = models.ForeignKey(Agence, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.nom_complet}"
 
 class Activite(models.Model):
     num_activite = models.CharField(max_length=10) 
@@ -31,13 +37,14 @@ class Activite(models.Model):
             # Get the maximum compteur value for records with the same type_activite
             max_compteur = Activite.objects.filter(type_activite=self.type_activite).aggregate(models.Max('compteur'))['compteur__max']
             self.compteur = max_compteur + 1 if max_compteur is not None else 1
-
         super().save(*args, **kwargs)
 
 
 class Expediteur(models.Model):
     num_expediteur = models.AutoField(primary_key=True)
     type_expediteur = models.CharField(max_length=100)
+    def __str__(self):
+        return f"{self.type_expediteur}"
 
 class Panier(models.Model):
     num_Panier = models.AutoField( primary_key=True)
@@ -96,6 +103,8 @@ class Reexpedition(models.Model):
         ville = Ville.objects.get(nom_ville=self.nom_ville)
         self.code_postale = ville.code_postale
         super(Reexpedition, self).save(*args, **kwargs)
+        
+    
 
 
 

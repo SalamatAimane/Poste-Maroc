@@ -73,10 +73,14 @@ def reexpedition(request):
     matricule = request.session.get('matricule')
     profile= request.session.get('profile')
     nom_agence=request.session.get('nom_agence')
+    expediteurs=models.Expediteur.objects.all()
+    villes=models.Ville.objects.all()
     context = {
         'matricule': matricule,
         'profile': profile,
         'nom_agence': nom_agence,
+        'expediteurs':expediteurs,
+        'villes': villes,
     }
     return render(request, 'reexpedition.html',context)
 

@@ -234,7 +234,8 @@ label {
     font-weight: bold;
   }
   
-input[type="text"],input[type="email"]  {
+input[type="text"],input[type="email"] , select {
+
     flex:1;
     font-size: 15px;
     color:black;
@@ -405,8 +406,12 @@ opacity:0.8;
     <form method="post" class="main" action="{% url 'reexpedition_save' %}">
     {% csrf_token %} 
         <div>
-          <label>Expediteur :  </label>
-          <input type="text" name="type_expediteur"  required>
+        <label for="expediteur">Expediteur : </label>
+        <select name="type_expediteur" required>
+                {% for expediteur in expediteurs %}
+                    <option value="{{ expediteur.type_expediteur }}">{{ expediteur.type_expediteur }}</option>
+                {% endfor %}
+        </select>
         </div>
         <div>
         <label>Mois Abonnement :  </label>
@@ -414,19 +419,33 @@ opacity:0.8;
         </div>
         <div>
           <label>Ville Expediteur :  </label>
-          <input type="text" name="nom_ville"  required>
+          <select name="ville" id="ville" onchange="updateInputValue()" required>
+            {% for ville in villes %}
+            <option value="{{ ville.code_postale }}">{{ ville.nom_ville }}</option>
+            {% endfor %}
+            </select>
+
         </div>
         <div>
             <label>Prix Abonnement :  </label>
-            <input type="text" value="" readonly>
+            <input type="text" value="{{ prix }}" readonly>
           </div>
           
       
         <div>
           <label>Code Postale :  </label>
-          <input type="text" value=""  readonly>
+          <input type="text" name="code_postale" id="code" readonly>
         </div>
-      
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            // Function to update the input value
+            $(document).ready(function() {
+                $('#ville').change(function() {
+                    var selectedValue = $(this).val();
+                    $('#code').val(selectedValue);
+                });
+            });
+        </script>
         <div>
             <label>Adresse Nouvelle :  </label>
             <input type="text" name="adresse_nouvelle" required>
