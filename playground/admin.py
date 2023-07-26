@@ -13,7 +13,6 @@ from .models import PrixBoiteReexpedition
 from .models import PrixColisCourrier
 from .models import Recu
 
-
 admin.site.register(Ville) 
 admin.site.register(Agence) 
 admin.site.register(Agent) 
