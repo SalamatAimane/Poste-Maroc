@@ -122,9 +122,9 @@
     <form method="post" action="{% url 'LoginPage' %}">
       {% csrf_token %} 
      <h3>Nom d'utilisateur</h3>
-      <input type="text" class="user" name="username" required>
+      <input type="text" class="user" name="username" >
       <h3>Mot de Passe</h3>
-      <input type="password" class="user" name="password" required>
+      <input type="password" class="user" name="password" >
       <input type="submit" value="Se Connecter">
       {% if error_message %}
       <p type="text" class="error">{{ error_message }}</p>

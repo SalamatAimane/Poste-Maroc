@@ -234,7 +234,7 @@ label {
     font-weight: bold;
   }
   
-input[type="text"],input[type="email"] , select {
+input[type="text"],input[type="email"] ,input[type="number"], select {
 
     flex:1;
     font-size: 15px;
@@ -407,19 +407,23 @@ opacity:0.8;
     {% csrf_token %} 
         <div>
         <label for="expediteur">Expediteur : </label>
-        <select name="type_expediteur" required>
-                {% for expediteur in expediteurs %}
-                    <option value="{{ expediteur.type_expediteur }}">{{ expediteur.type_expediteur }}</option>
+        <select name="type_expediteur" id="type" >
+                {% for prix in prixs %}
+                <option value="{{ prix.prix }}">{{ prix.type_expediteur }}</option>
                 {% endfor %}
         </select>
         </div>
         <div>
         <label>Mois Abonnement :  </label>
-         <input type="text" name="mois_abonnement" required>
+         <select name="mois_abonnement">
+            {% for prix in prixs %}
+            <option>{{ prix.mois_abonnement }}</option>
+            {% endfor %}
+            </select>
         </div>
         <div>
           <label>Ville Expediteur :  </label>
-          <select name="ville" id="ville" onchange="updateInputValue()" required>
+          <select name="ville" id="ville" >
             {% for ville in villes %}
             <option value="{{ ville.code_postale }}">{{ ville.nom_ville }}</option>
             {% endfor %}
@@ -428,9 +432,17 @@ opacity:0.8;
         </div>
         <div>
             <label>Prix Abonnement :  </label>
-            <input type="text" value="{{ prix }}" readonly>
+            <input type="text" id="prix" readonly>
           </div>
-          
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script>
+              $(document).ready(function() {
+                  $('#type').change(function() {
+                      var selectedValue = $(this).val();
+                      $('#prix').val(selectedValue);
+                  });
+              });
+          </script>
       
         <div>
           <label>Code Postale :  </label>
@@ -447,26 +459,26 @@ opacity:0.8;
         </script>
         <div>
             <label>Adresse Nouvelle :  </label>
-            <input type="text" name="adresse_nouvelle" required>
+            <input type="text" name="adresse_nouvelle" >
           </div>
 
         <div>
           <label>Adresse Actuelle :  </label>
-          <input type="text"  name="adresse_actuelle" required>
+          <input type="text"  name="adresse_actuelle" >
         </div>
       
         <div>
             <label>Email :  </label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" >
           </div>
   
         <div>
           <label>N° GSM :  </label>
-          <input type="text" name="num_tel_exp" required>
+          <input type="text" name="num_tel_exp"  pattern="0[67][0-9]{8}" title="entrez un nombre de 10-digit qui commence par 06 ou 07">
         </div>
           <div>
             <label>Piece Identite :  </label>
-            <input type="text" name="piece_identite" required>
+            <input type="text" name="piece_identite" >
           </div>
         <div>
           <button type="submit" class="save" >ajouter au panier</button>

@@ -28,7 +28,7 @@ class Agent(models.Model):
         return f"{self.nom_complet}"
 
 class Activite(models.Model):
-    num_activite = models.CharField(max_length=10) 
+    num_activite = models.CharField(max_length=10 ) 
     type_activite = models.CharField(max_length=100, primary_key=True)
     compteur = models.IntegerField()
 
@@ -38,6 +38,8 @@ class Activite(models.Model):
             max_compteur = Activite.objects.filter(type_activite=self.type_activite).aggregate(models.Max('compteur'))['compteur__max']
             self.compteur = max_compteur + 1 if max_compteur is not None else 1
         super().save(*args, **kwargs)
+    def __str__(self):
+        return f"{self.type_activite}"
 
 
 class Expediteur(models.Model):
@@ -81,6 +83,8 @@ class PrixBoiteReexpedition(models.Model):
                 name='prix_boite_reexpedition_unique_constraint'
             )
         ]
+    def __str__(self):
+        return f"{self.type_activite} {self.type_expediteur}"
 
 class Reexpedition(models.Model):
     num_reexp = models.CharField(max_length=10, primary_key=True)
