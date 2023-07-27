@@ -30,7 +30,7 @@ class Agent(models.Model):
 class Activite(models.Model):
     num_activite = models.CharField(max_length=10 ) 
     type_activite = models.CharField(max_length=100, primary_key=True)
-    compteur = models.IntegerField()
+    compteur = models.IntegerField(null=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # Check if the object is being created
@@ -72,7 +72,7 @@ class Recu(models.Model):
 
 class PrixBoiteReexpedition(models.Model):
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
-    mois_abonnement = models.CharField(max_length=10, default=None)
+    mois_abonnement = models.CharField(max_length=10)
     type_expediteur = models.ForeignKey(Expediteur, on_delete=models.CASCADE)
     prix = models.DecimalField(max_digits=8, decimal_places=3)
 
@@ -93,14 +93,14 @@ class Reexpedition(models.Model):
     adresse_actuelle = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()]) #control de l'email
     piece_identite = models.CharField(max_length=100)
-    mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,  limit_choices_to=models.Q(), related_name='reexpedition_mois_abonnement')
+    mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_mois_abonnement')
     code_postale = models.IntegerField()
     nom_ville = models.CharField(max_length=20)
     num_tel_exp = models.CharField(max_length=20)
-    type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,  limit_choices_to=models.Q(), related_name='reexpedition_type_expediteur')
+    type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_type_expediteur')
     date = models.DateTimeField(auto_now_add=True) #date system
-    matricule = models.ForeignKey(Agent, on_delete=models.CASCADE)
-    num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE)
+    matricule = models.ForeignKey(Agent, on_delete=models.CASCADE,null=True)
+    num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):

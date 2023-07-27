@@ -278,7 +278,7 @@ button {
     background-color:var(--black1);
     color: white;
     border-radius: 30px;
-    bottom:50px;
+    bottom:88px;
     right: 150px;
     position: absolute;
     z-index: 9999;
@@ -403,7 +403,7 @@ opacity:0.8;
     <form action="{% url 'reexpedition' %}">
         <button type="submit" class="annuler">Annuler</button>
     </form>
-    <form method="post" class="main" action="{% url 'reexpedition_save' %}">
+    <form method="post" class="main" action="{% url 'reexpedition_save' %}" id="myForm">
     {% csrf_token %} 
         <div>
         <label for="expediteur">Expediteur : </label>
@@ -423,7 +423,7 @@ opacity:0.8;
         </div>
         <div>
           <label>Ville Expediteur :  </label>
-          <select name="ville" id="ville" >
+          <select name="nom_ville" id="ville" >
             {% for ville in villes %}
             <option value="{{ ville.code_postale }}">{{ ville.nom_ville }}</option>
             {% endfor %}
@@ -432,7 +432,7 @@ opacity:0.8;
         </div>
         <div>
             <label>Prix Abonnement :  </label>
-            <input type="text" id="prix" readonly>
+            <input type="text" id="prix"  name="prix" readonly>
           </div>
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script>
@@ -459,12 +459,12 @@ opacity:0.8;
         </script>
         <div>
             <label>Adresse Nouvelle :  </label>
-            <input type="text" name="adresse_nouvelle" >
+            <input type="text" name="adresse_nouvelle" id="input1" >
           </div>
 
         <div>
           <label>Adresse Actuelle :  </label>
-          <input type="text"  name="adresse_actuelle" >
+          <input type="text"  name="adresse_actuelle" id="input2">
         </div>
       
         <div>
@@ -483,6 +483,20 @@ opacity:0.8;
         <div>
           <button type="submit" class="save" >ajouter au panier</button>
         </div>
+        <script>
+            document.getElementById("myForm").addEventListener("submit", function(event) {
+              event.preventDefault(); 
+              var input1Value = document.getElementById("input1").value;
+              var input2Value = document.getElementById("input2").value;  
+              if (input1Value === input2Value) {
+                alert("les adresses doivent être différentes!");
+              } 
+              else{
+              document.getElementById("myForm").submit();
+              }
+            });
+          </script>
+          
     </form>
 
 </body>
