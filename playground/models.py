@@ -109,7 +109,7 @@ class Reexpedition(models.Model):
     def save(self, *args, **kwargs):
         ville = Ville.objects.get(nom_ville=self.nom_ville)
         self.code_postale = ville.code_postale
-        super(Reexpedition, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.type_activite} {self.date}"
