@@ -65,6 +65,9 @@ class Panier(models.Model):
             else:
                 self.num_Panier = 1
         super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"{self.num_agent} {self.date}"
 
 class Recu(models.Model):
     num_recu = models.IntegerField(primary_key=True)
@@ -91,14 +94,14 @@ class Reexpedition(models.Model):
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
     adresse_nouvelle = models.CharField(max_length=100)
     adresse_actuelle = models.CharField(max_length=100)
-    email = models.EmailField(validators=[EmailValidator()]) #control de l'email
+    email = models.EmailField(validators=[EmailValidator()])
     piece_identite = models.CharField(max_length=100)
     mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_mois_abonnement')
     code_postale = models.IntegerField()
     nom_ville = models.CharField(max_length=20)
     num_tel_exp = models.CharField(max_length=20)
     type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_type_expediteur')
-    date = models.DateTimeField(auto_now_add=True) #date system
+    date = models.DateTimeField(auto_now_add=True) 
     matricule = models.ForeignKey(Agent, on_delete=models.CASCADE,null=True)
     num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=100)
@@ -107,6 +110,9 @@ class Reexpedition(models.Model):
         ville = Ville.objects.get(nom_ville=self.nom_ville)
         self.code_postale = ville.code_postale
         super(Reexpedition, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.type_activite} {self.date}"
         
     
 
