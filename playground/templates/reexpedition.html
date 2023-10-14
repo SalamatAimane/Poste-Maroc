@@ -4,7 +4,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />   
+         <style>
+            /* ======= Table Styling ======= */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid var(--black2);
+        }
+
+        th, td {
+            border: 1px solid var(--black2);
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        th {
+            background-color: var(--blue);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--gray);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        
         /* =========== Google Fonts ============ */
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
@@ -260,7 +299,7 @@ button {
   }
   
  .save{
-    bottom: 34px;;
+    bottom: 8px;;
     right: 200px;
     position: absolute;
     background-color: var(--blue);
@@ -278,7 +317,7 @@ button {
     background-color:var(--black1);
     color: white;
     border-radius: 30px;
-    bottom:88px;
+    bottom: 200px;
     right: 150px;
     position: absolute;
     z-index: 9999;
@@ -330,8 +369,13 @@ opacity:0.8;
                     </a>
                 </li>
             </div>
+
+
+            <br>
+            <br>
+
                 <li>
-                    <a href="#">
+                    <a href="{% url 'P_C' %}">
                         <span class="icon">
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                         </span>
@@ -340,13 +384,22 @@ opacity:0.8;
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="{% url 'P_colis' %}">
                         <span class="icon">
                             
                                 <i class="fa fa-archive" aria-hidden="true"></i>
                 
                         </span>
                         <span class="title">Colis</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'Panier' %}">
+                        <span class="icon">
+                            <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                        </span>
+                        <span class="title">Panier</span>
                     </a>
                 </li>
 
@@ -371,6 +424,15 @@ opacity:0.8;
                         <span class="title">Boîte postale</span>
                     </a>
                 </li>
+
+
+             <br>
+             <br>
+             <br>
+             <br>
+             <br>
+             <br>
+
             
                 <li class="compte-hovered">
                     <a href="{% url 'compte' %}">

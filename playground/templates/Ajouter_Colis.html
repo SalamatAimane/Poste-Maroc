@@ -204,12 +204,121 @@ input [type=number]
     text-align: center;
 }
 
+.main {
+    display:grid;
+    grid-template-columns: 50% 50%;
+    position: absolute;
+    padding-bottom: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    top:200px;
+    right: 30px;
+    width: 900px;
+    height: 500px;
+    background-color: #E6E6E6;
+    border-radius: 20px;
+  }
+  
+  .main div {
+    display: flex;
+    align-items:center;
+    margin: 20px;
+  }
+  
+label {
+    font-size: 15px;
+    color:black;
+    font-family: Poppins;
+    font-style: normal;
+    margin: 5px;
+    font-weight: bold;
+  }
+  
+input[type="text"],input[type="email"] , select {
+
+    flex:1;
+    font-size: 15px;
+    color:black;
+    text-align: center;
+    font-family: Poppins;
+    font-style: normal;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--black2);
+    border-radius: 30px;
+  }
+  
+button {
+    font-family: Poppins;
+    font-style: normal;
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .save {
+    top: 520px;
+    right: 170px;
+    position: absolute;
+    background-color: var(--blue);
+    color: white;
+    border-radius: 30px;
+}
+
+  
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+
+.annuler{
+    background-color:var(--black1);
+    color: white;
+    border-radius: 30px;
+    top: 720px;
+    right: 70px;
+    position: absolute;
+    z-index: 9999;
+  
+   
+  }
+  
+.retour{
+position: absolute; 
+top:20px;
+left: 350px;
+}
+.retour button:hover{
+opacity:0.8;
+}
+
+
+.image-container {
+  max-width:600px; /* Ajustez la largeur maximale du conteneur de l'image selon vos besoins */
+  margin:20 auto; /* Centrez l'image horizontalement dans le conteneur */
+  border-radius: 10px; /* Ajoutez un effet d'arrondi aux coins de l'image */
+  overflow: hidden; /* Masquez toute partie de l'image qui dépasse du conteneur */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ajoutez une ombre subtile à l'image */
+}
+
+.user-image {
+  width: 100%; /* Pour assurer que l'image s'adapte correctement à la largeur du conteneur */
+  height: auto; /* Laissez la hauteur ajuster automatiquement en fonction de la largeur */
+  display: block; /* Supprimez les espaces vides en dessous de l'image */
+  transform: scale(0.8); 
+}
 
     </style>
 </head>
 <body>
-    
-
+</div>
+<div class="CodeAutoGNRLdMa" style="left: 800px; top: 150px; position: absolute; color: #636363; font-size: 16px; font-family: Poppins; font-weight: 600; word-wrap: break-word">Code auto-généré : </div>
+<div class="EnregistrementDUnColis" style="left: 330px; top: 150px; position: absolute; color: #636363; font-size: 16px; font-family: Poppins; font-weight: 600; word-wrap: break-word">Enregistrement d’un colis: </div>
+</div>
 <div class="info-user">
         <div class="user-icon">
             <span class="icon-user">
@@ -226,7 +335,10 @@ input [type=number]
     <div class="user-panier">
         <span class="icon-user">
             {% load static %}
-            <img src="{% static '../static/images/paniers.png' %}" alt="user">
+            <div class="image-container">
+                <img src="{% static '../static/paniers.png' %}" alt="user" class="user-image">
+              </div>
+              
         </span>
         <h1 style="font-family: Poppins; color:var(--blue); ">1</h1>
     </div>
@@ -238,18 +350,15 @@ input [type=number]
                     <a href="#">
                         <span class="icon">
                             {% load static %}
-                            <img src="{% static '../static/images/Poste_Maroc_logo.png' %}" alt="logo">
+                            <img src="{% static '../static/Poste_Maroc_logo.png' %}" alt="logo">
                         </span>
                     </a>
                 </li>
             </div>
-            
-             
-             
-             <br>
+
+            <br>
              <br>
 
-             
                 <li>
                     <a href="{% url 'P_C' %}">
                         <span class="icon">
@@ -300,18 +409,16 @@ input [type=number]
                         <span class="title">Boîte postale</span>
                     </a>
                 </li>
-            
+
+
+                <br>
+             <br><br>
+             <br><br>
              <br>
-             <br>
-             <br>
-             <br>
-             <br>
-             <br>
+
              
-
-
-
-                <li>
+            
+                <li class="compte-hovered">
                     <a href="{% url 'compte' %}">
                         <span class="icon">
                             
@@ -334,8 +441,144 @@ input [type=number]
            
         </ul>
     </div>
-    
-    
-</body>
+    <form action ="{% url 'P_colis' %}">
+    <div class="retour">
+    <button style="background-color:#001272;color:#fff;border-radius: 30px;" type="submit">Retour</button>
+    </div>
+    </form>
+        <button type="submit" class="annuler">Annuler</button>
+    </form>
+    <form method="post" class="main" action="{% url 'Ajouter_Colis' %}">
+    {% csrf_token %} 
 
+    
+    <div>
+        <label for="expediteur">Expediteur : </label>
+        <select name="type_expediteur" >
+            {% for expediteur in expediteurs %}
+                <option value="{{ expediteur.type_expediteur }}">{{ expediteur.type_expediteur }}</option>
+            {% endfor %}
+        </select>
+    </div>
+  
+    <div>
+
+        <label>Nom Expediteur : </label>
+        <input type="text" name="Nom_Expiditeur" >
+      </div>
+
+
+        <div>
+          <label>Ville Expediteur :  </label>
+          <select name="ville" id="ville" onchange="updateInputValue()" >
+            {% for ville in villes %}
+            <option value="{{ ville.code_postale }}">{{ ville.nom_ville }}</option>
+            {% endfor %}
+            </select>
+
+        </div>
+        
+        <div>
+            <label>code postal  :  </label>
+            <input type="text" name="code_postale" id="code" readonly>
+          </div>
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script>
+              $(document).ready(function() {
+                  $('#ville').change(function() {
+                      var selectedValue = $(this).val();
+                      $('#code').val(selectedValue);
+                  });
+              });
+          </script>
+
+        <div>
+
+            <label>Adresse expediteur : </label>
+            <input type="text" name="adresse_nouvelle" >
+          </div>
+
+
+          <div>
+            <label>N° GSM :  </label>
+            <input type="text" name="num_tel_exp"  pattern="0[67][0-9]{8}" title="Please enter a valid 10-digit number starting with 06 or 07">
+           </div>
+          
+          <div>
+            <label>Email :  </label>
+            <input type="email" name="email" >
+          </div>
+        
+          <div>
+            <label>Nom Destinataire : </label>
+            <input type="text" name="Destinataire" >
+          </div>
+          <div>
+            <label>Ville destinataire :  </label>
+            <select name="ville" id="ville" onchange="updateInputValue()" >
+              {% for ville in villes %}
+              <option value="{{ ville.code_postale }}">{{ ville.nom_ville }}</option>
+              {% endfor %}
+              </select>
+  
+          </div>
+         
+       
+         
+
+        <div>
+          <label>Adresse destinataire :  </label>
+          <input type="text"  name="adresse_destinataire" >
+        </div>
+         <div>
+            <label>N° GSM :  </label>
+            <input type="text" name="num_tel_dest"  pattern="0[67][0-9]{8}" title="Please enter a valid 10-digit number starting with 06 or 07">
+           </div>
+        <div>
+            <label>Poids : </label>
+            <input type="text" name="Poids" >
+          </div>
+  
+        <div>
+          <label>Prix : </label>
+          <input type="text" name="prix" value="{{ prix }}" readonly>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Fonction pour mettre à jour le prix en fonction du poids
+                function updatePrice() {
+                    const poids = parseFloat($('[name="Poids"]').val());
+                    let prix = 0;
+        
+                    if (poids >= 0.001 && poids <= 0.5) {
+                        prix = 10;
+                    } else if (poids > 0.5 && poids <= 1000) {
+                        prix = 12;
+                    }
+        
+                    $('[name="prix"]').val(prix);
+                }
+        
+                // Appeler la fonction updatePrice au chargement de la page
+                updatePrice();
+        
+                // Associer la fonction updatePrice à l'événement "input" du champ de poids
+                $('[name="Poids"]').on('input', function() {
+                    updatePrice();
+                });
+            });
+        </script>
+            
+        
+        
+
+         
+        <div>
+          <button type="submit" class="save" >ajouter au panier</button>
+        </div>
+    </form>
+
+</body>
 </html>

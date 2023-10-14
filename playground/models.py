@@ -18,6 +18,7 @@ class Agence(models.Model):
 
     
 class Agent(models.Model):
+    
     matricule = models.CharField(max_length=10, primary_key=True)
     nom_complet = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
@@ -95,24 +96,21 @@ class Reexpedition(models.Model):
     adresse_nouvelle = models.CharField(max_length=100)
     adresse_actuelle = models.CharField(max_length=100)
     email = models.EmailField(validators=[EmailValidator()])
-    piece_identite = models.CharField(max_length=100)
-    mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_mois_abonnement')
+    mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE, null=True, related_name='reexpedition_mois_abonnement')
     code_postale = models.IntegerField()
     nom_ville = models.CharField(max_length=20)
     num_tel_exp = models.CharField(max_length=20)
-    type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE,null=True, limit_choices_to=models.Q(), related_name='reexpedition_type_expediteur')
-    date = models.DateTimeField(auto_now_add=True) 
-    matricule = models.ForeignKey(Agent, on_delete=models.CASCADE,null=True)
-    num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE,null=True)
+    type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE, null=True, related_name='reexpedition_type_expediteur')
+    date = models.DateTimeField(auto_now_add=True)
+    matricule = models.ForeignKey(Agent, on_delete=models.CASCADE, null=True)
+    num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        ville = Ville.objects.get(nom_ville=self.nom_ville)
-        self.code_postale = ville.code_postale
-        super().save(*args, **kwargs)
-    
-    def __str__(self):
-        return f"{self.type_activite} {self.date}"
+        if not self.code_postale:  # Update code_postale only if it's not set
+            ville = Ville.objects.get(nom_ville=self.nom_ville)
+            self.code_postale = ville.code_postale
+        super(Reexpedition, self).save(*args, **kwargs)
         
     
 
@@ -122,7 +120,7 @@ class BoitePostale(models.Model):
     num_boite = models.CharField(max_length=10, primary_key=True)
     type_activite = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE, limit_choices_to=models.Q(), related_name='boitepostale_type_activite')
     adresse_client = models.CharField(max_length=100)
-    email_client = models.EmailField(validators=[EmailValidator()]) #control de l'email
+    email_client = models.EmailField(validators=[EmailValidator()])
     piece_identite = models.CharField(max_length=100)
     nom_client = models.CharField(max_length=100)
     code_postale = models.IntegerField()
@@ -130,15 +128,19 @@ class BoitePostale(models.Model):
     mois_abonnement = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE, limit_choices_to=models.Q(), related_name='boitepostale_mois_abonnement')
     num_tel_exp = models.CharField(max_length=20)
     type_expediteur = models.ForeignKey(PrixBoiteReexpedition, on_delete=models.CASCADE, limit_choices_to=models.Q(), related_name='boitepostale_type_expediteur')
-    date = models.DateTimeField(auto_now_add=True) #date system
+    date = models.DateTimeField(auto_now_add=True)
     matricule = models.ForeignKey(Agent, on_delete=models.CASCADE)
     num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        ville = Ville.objects.get(nom_ville=self.nom_ville)
-        self.code_postale = ville.code_postale
-        super(Reexpedition, self).save(*args, **kwargs)
+        if not self.code_postale:  # Update code_postale only if it's not set
+            ville = Ville.objects.get(nom_ville=self.nom_ville)
+            self.code_postale = ville.code_postale
+        super(BoitePostale, self).save(*args, **kwargs)
+        
+        
+        
 
 class PrixColisCourrier(models.Model):
     custom_id = models.CharField(max_length=10, primary_key=True, default=1)
@@ -160,8 +162,8 @@ class Colis(models.Model):
     num_colis = models.CharField(max_length=10, primary_key=True)
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE, limit_choices_to=models.Q())
     adresse_destinataire = models.CharField(max_length=100)
-    email_dest = models.EmailField(validators=[EmailValidator()]) #control de l'email
-    email_exped = models.EmailField(validators=[EmailValidator()]) #control de l'email
+    email_dest = models.EmailField(validators=[EmailValidator()])
+    email_exped = models.EmailField(validators=[EmailValidator()])
     piece_identite = models.CharField(max_length=100)
     code_postale = models.IntegerField()
     nom_ville = models.CharField(max_length=20)
@@ -169,32 +171,31 @@ class Colis(models.Model):
     poids_sup = models.DecimalField(max_digits=5, decimal_places=3)
     num_tel_exp = models.CharField(max_length=20)
     type_expediteur = models.ForeignKey(PrixColisCourrier, on_delete=models.CASCADE, limit_choices_to=models.Q())
-    date = models.DateTimeField(auto_now_add=True) #date system
+    date = models.DateTimeField(auto_now_add=True)
     matricule = models.ForeignKey(Agent, on_delete=models.CASCADE)
     num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        if not self.num_colis:  # Check if the object is being created
+        if not self.num_colis:  # Generate num_colis only if it's not set
             activite = self.type_activite
             num_activite = activite.num_activite
-
-            # Get the maximum compteur value for records with the same num_activite
-            max_compteur = Colis.objects.filter(type_activite_num_activite=num_activite).aggregate(Max('compteur'))['compteur_max']
+            max_compteur = Colis.objects.filter(type_activite__num_activite=num_activite).aggregate(Max('compteur'))['compteur__max']
             compteur = max_compteur + 1 if max_compteur is not None else 1
-
             self.num_colis = f"{num_activite}{compteur:03d}MA"
-        # Update the code_postale based on nom_ville
-        ville = Ville.objects.get(nom_ville=self.nom_ville)
-        self.code_postale = ville.code_postale
-        super(Reexpedition, self).save(*args, **kwargs)
+        if not self.code_postale:  # Update code_postale based on nom_ville
+            ville = Ville.objects.get(nom_ville=self.nom_ville)
+            self.code_postale = ville.code_postale
+        super(Colis, self).save(*args, **kwargs)
+        
+        
 
 class Courrier(models.Model):
     num_courrier = models.CharField(max_length=10, primary_key=True)
     type_activite = models.ForeignKey(Activite, on_delete=models.CASCADE, limit_choices_to=models.Q())
     adresse_destinataire = models.CharField(max_length=100)
-    email_dest = models.EmailField(validators=[EmailValidator()]) #control de l'email
-    email_exped = models.EmailField(validators=[EmailValidator()]) #control de l'email
+    email_dest = models.EmailField(validators=[EmailValidator()])
+    email_exped = models.EmailField(validators=[EmailValidator()])
     piece_identite = models.CharField(max_length=100)
     code_postale = models.IntegerField()
     nom_ville = models.CharField(max_length=20)
@@ -202,22 +203,19 @@ class Courrier(models.Model):
     poids_sup = models.DecimalField(max_digits=5, decimal_places=3)
     num_tel_exp = models.CharField(max_length=20)
     type_expediteur = models.ForeignKey(PrixColisCourrier, on_delete=models.CASCADE, limit_choices_to=models.Q())
-    date = models.DateTimeField(auto_now_add=True) #date system
+    date = models.DateTimeField(auto_now_add=True)
     matricule = models.ForeignKey(Agent, on_delete=models.CASCADE)
     num_panier = models.ForeignKey(Panier, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        if not self.num_courrier:  # Check if the object is being created
+        if not self.num_courrier:  # Generate num_courrier only if it's not set
             activite = self.type_activite
             num_activite = activite.num_activite
-
-            # Get the maximum compteur value for records with the same num_activite
-            max_compteur = Colis.objects.filter(type_activite_num_activite=num_activite).aggregate(Max('compteur'))['compteur_max']
+            max_compteur = Colis.objects.filter(type_activite__num_activite=num_activite).aggregate(Max('compteur'))['compteur__max']
             compteur = max_compteur + 1 if max_compteur is not None else 1
-
-            self.num_colis = f"{num_activite}{compteur:03d}MA"
-        # Update the code_postale based on nom_ville
-        ville = Ville.objects.get(nom_ville=self.nom_ville)
-        self.code_postale = ville.code_postale
-        super(Reexpedition, self).save(*args, **kwargs)
+            self.num_courrier = f"{num_activite}{compteur:03d}MA"
+        if not self.code_postale:  # Update code_postale based on nom_ville
+            ville = Ville.objects.get(nom_ville=self.nom_ville)
+            self.code_postale = ville.code_postale
+        super(Courrier, self).save(*args, **kwargs)

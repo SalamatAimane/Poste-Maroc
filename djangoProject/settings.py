@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  
         'NAME': 'barid_database',  
         'USER': 'root',  
-        'PASSWORD': 'emsi',  
+        'PASSWORD': 'aiMane2001$$$',  
         'HOST': '127.0.0.1',  
         'PORT': '3306',  
         'OPTIONS': {  

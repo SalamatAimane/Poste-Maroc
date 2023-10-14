@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 import datetime
 from . import models 
+from .models import Colis, Courrier, Panier
+from .models import PrixColisCourrier, Panier
+
+from . import models
 
 def LoginPage(request):
     if request.method == 'POST':
@@ -151,15 +155,220 @@ def reexpedition_save(request):
 
 
 def welcome(request):
+    
     if request.session.get('matricule') and request.session.get('password'):
         matricule = request.session.get('matricule')
-        profile= request.session.get('profile')
-        nom_agence=request.session.get('nom_agence')
+        profile = request.session.get('profile')
+        nom_agence = request.session.get('nom_agence')
+        
+        # Récupérer tous les objets Panier depuis la base de données
+        panier_list = Panier.objects.all()
+        
         context = {
             'matricule': matricule,
             'profile': profile,
-            'nom_agence': nom_agence
+            'nom_agence': nom_agence,
+            'panier_list': panier_list,  # Ajoutez la liste des objets Panier au contexte
         }
-        return render(request,'sidebar.html',context)
-    else :
+        return render(request, 'sidebar.html', context)
+    else:
         return redirect('logout')
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+def Ajouter_Colis(request):
+    
+    return render (request, 'Ajouter_Colis.html')
+
+def P_colis(request):
+    
+    return render (request, 'P_colis.html')
+
+
+def ajouter_courrier(request):
+    # Votre logique de traitement ici, si nécessaire
+    return render(request, 'Ajouter.html')  # Remplacez 'nom_de_votre_template.html' par le nom de votre template pour la page d'ajout de courrier
+
+
+def P_C(request):   
+    # Récupérer tous les objets Colis depuis la base de données
+    courrier_list = Courrier.objects.all()
+    # Passer la liste des objets Colis au modèle contextuel
+    context = {'courrier_list': courrier_list} 
+    return render(request, 'P_C.html',context)
+
+
+def courrier_save(request):
+    
+    return render(request, 'P_C.html')
+
+def courrier(request):
+    matricule = request.session.get('matricule')
+    profile= request.session.get('profile')
+    nom_agence=request.session.get('nom_agence')
+    expediteurs=models.Expediteur.objects.all()
+    villes=models.Ville.objects.all()
+    context = {
+        'matricule': matricule,
+        'profile': profile,
+        'nom_agence': nom_agence,
+        'expediteurs':expediteurs,
+        'villes': villes,
+    }
+    return render(request, 'Ajouter.html',context)
+
+def colis(request):
+    matricule = request.session.get('matricule')
+    profile= request.session.get('profile')
+    nom_agence=request.session.get('nom_agence')
+    expediteurs=models.Expediteur.objects.all()
+    villes=models.Ville.objects.all()
+    context = {
+        'matricule': matricule,
+        'profile': profile,
+        'nom_agence': nom_agence,
+        'expediteurs':expediteurs,
+        'villes': villes,
+    }
+    return render(request, 'Ajouter_colis.html',context)
+
+
+
+
+def P_colis(request):
+    # Récupérer tous les objets Colis depuis la base de données
+    colis_list = Colis.objects.all()
+    # Passer la liste des objets Colis au modèle contextuel
+    context = {'colis_list': colis_list}
+    return render(request, 'P_colis.html',context)
+
+
+
+
+
+def ajouter_colis(request):
+  
+    return render(request, 'Ajouter_Colis.html') 
+    
+def welcome(request):
+    matricule = request.session.get('matricule')
+    profile= request.session.get('profile')
+    nom_agence=request.session.get('nom_agence')
+    context = {
+        'matricule': matricule,
+        'profile': profile,
+        'nom_agence': nom_agence
+    }
+    return render(request,'sidebar.html',context)
+
+
+
+
+
+def ajouter_courrier(request):
+    if request.method == 'POST':
+        # Récupérer les données du formulaire soumis
+        nom_article = "Courrier"  # Vous pouvez définir le nom de l'article ici
+        quantite = int(request.POST.get('quantite', 1))  # Récupérer la quantité, par défaut 1 si non spécifiée
+        prix_unitaire = float(request.POST.get('prix_unitaire', 0.0))  # Récupérer le prix unitaire, par défaut 0.0 si non spécifié
+        prix_total = quantite * prix_unitaire  # Calculer le prix total
+
+        # Afficher les détails du courrier avec les boutons "Valider le panier" et "Annuler"
+        return render(request, 'Panier.html', {
+            'nom_article': nom_article,
+            'quantite': quantite,
+            'prix_unitaire': prix_unitaire,
+            'prix_total': prix_total
+        })
+
+    return render(request, 'Ajouter.html')  # Renvoyer la page Ajouter.html pour que l'utilisateur puisse remplir le formulaire
+
+
+
+
+def valider_panier(request):
+    if request.method == 'POST':
+        # Récupérer les détails du formulaire
+        nom_article = request.POST.get('nom_article')
+        quantite = int(request.POST.get('quantite', 1))
+        prix_unitaire = float(request.POST.get('prix_unitaire', 0.0))
+        prix_total = float(request.POST.get('prix_total', 0.0))
+
+        # Sauvegarder les détails du courrier dans la base de données en utilisant le modèle Cart
+        new_item = Panier(
+            nom_article=nom_article,
+            quantite=quantite,
+            prix_unitaire=prix_unitaire,
+            prix_total=prix_total
+            # Ajoutez d'autres champs pertinents ici selon les besoins
+        )
+        new_item.save()
+
+        # Rediriger vers la page du panier ou une autre page de confirmation si nécessaire
+        return redirect('panier')
+
+def annuler(request):
+    # Vous pouvez simplement rediriger l'utilisateur vers une autre page en cas d'annulation
+    return redirect('')  # Remplacez 'page_d_accueil' par l'URL de la page que vous souhaitez afficher
+
+
+
+
+
+
+def ajouter_au_panier(request):
+    if request.method == 'POST':
+        type_expediteur = request.POST.get('type_expediteur')
+        poids = float(request.POST.get('Poids'))
+        prix_unitaire = calculate_price(poids)  # Calculate the unit price based on the weight
+        
+        panier_item = Panier(type_expediteur=type_expediteur, poids=poids, prix_unitaire=prix_unitaire)
+        panier_item.save()
+        
+        return redirect('panier')
+    else:
+        # Provide the list of expediteurs to the template if needed
+        expediteurs = PrixColisCourrier.objects.all()
+        return render(request, 'ajouter.html', {'expediteurs': expediteurs})
+
+def calculate_price(weight):
+    # Write your logic to calculate the price based on the weight
+    # You can use the same logic as the one in your JavaScript code, or implement it differently here.
+    # For this example, let's assume a simple calculation:
+    if weight >= 0.001 and weight <= 0.5:
+        return 10
+    elif weight > 0.5 and weight <= 1000:
+        return 12
+
+def afficher_panier(request):
+    articles = Panier.objects.all()
+    
+    # Vous pouvez calculer le prix total ici
+    prix_total = 0
+    for article in articles:
+        prix_total += article.prix_ht + article.prix_ttc
+    
+    return render(request, 'Panier.html', {'articles': articles, 'prix_total': prix_total})
+
+
+
+
+
+
+
+   

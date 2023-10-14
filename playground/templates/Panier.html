@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> Courrier </title>  
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* ======= Table Styling ======= */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid var(--black2);
+        }
+
+        th, td {
+            border: 1px solid var(--black2);
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        th {
+            background-color: var(--blue);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--gray);
+        }
+
+        /* ======= Rest of the Styles (Sidebar, Headers, etc.) ======= */
+        /* ... Your existing styles for the sidebar and other elements ... */
+
+        /* =========== Google Fonts ============ */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        /* =============== Globals ============== */
+        * {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        :root {
+        --blue: #001272;
+        --white: #fff;
+        --gray: #f5f5f5;
+        --black1: #636363;
+        --black2: #CECECE;
+        }
+
+        body {
+        min-height: 100vh;
+        overflow-x: hidden;
+        }
+
+        .container {
+        position: relative;
+        width: 100%;
+        }
+
+        /* =============== Navigation ================ */
+        .navigation {
+        position: fixed;
+        width: 300px;
+        height: 100%;
+        background: var(--blue);
+        border-left: 10px solid var(--blue);
+
+        transition: 0.5s;
+        overflow: hidden;
+        }
+
+        .navigation-header{
+            margin-bottom: 60px;
+        }
+
+        .navigation.active {
+        width: 80px;
+        }
+
+
+        .navigation .icon img {
+            max-width: 50px; /* Adjust the size as needed */
+            height: auto;
+        }
+
+        .navigation ul {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        }
+
+
+        .navigation ul li {
+        position: relative;
+        width: 100%;
+        list-style: none;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        }
+
+        .navigation ul li:hover,
+        .navigation ul li.hovered {
+        background-color: var(--black2);
+        }
+
+        .navigation ul li:nth-child(1) {
+        /*margin-bottom: 40px;*/
+        pointer-events: none;
+        }
+
+        .navigation ul li a {
+        position: relative;
+        display: block;
+        width: 100%;
+        display: flex;
+        text-decoration: none;
+        color: var(--white);
+        font-size: 0.75rem;
+        }
+        .navigation ul li:hover a,
+        .navigation ul li.hovered a {
+        color: black;
+        }
+
+        .navigation ul li:hover a .icon i,
+        .navigation ul li.hovered .icon i{
+        color: black;
+        }
+
+        .navigation ul li a .icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            height: 60px;
+            line-height: 1;
+            text-align: center;
+        }
+        .navigation ul li a .icon img {
+            margin-left: 100px;
+            margin-top: 50px;
+        }
+        .navigation ul li a .icon i {
+            font-size: 0.75rem;
+            color: var(--black2);
+            margin-right: 5px;
+        }
+
+        .navigation ul li a .title {
+        position: relative;
+        display: block;
+        padding: 0 10px;
+        height: 60px;
+        line-height: 60px;
+        text-align: start;
+        white-space: nowrap;
+        }
+
+        /* --------- curve outside ---------- */
+        .navigation ul li:hover a::before,
+        .navigation ul li.hovered a::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: -50px;
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+        border-radius: 50%;
+        box-shadow: 35px 35px 0 10px var(--white);
+        pointer-events: none;
+        }
+        .navigation ul li:hover a::after,
+        .navigation ul li.hovered a::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: -50px;
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+        border-radius: 50%;
+        box-shadow: 35px -35px 0 10px var(--white);
+        pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navigation">
+        <ul>
+            <div class="navigation-header">
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            {% load static %}
+                            <img src="{% static '../static/images/Poste_Maroc_logo.png' %}" alt="logo">
+                        </span>
+                    </a>
+                </li>
+            </div>
+            
+
+            <br>
+             <br>
+
+            <li>
+                <a href="{% url 'P_C' %}">
+                    <span class="icon">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </span>
+                    <span class="title">Courrier</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'P_colis' %}">
+                    <span class="icon">
+
+                        <i class="fa fa-archive" aria-hidden="true"></i>
+
+                    </span>
+                    <span class="title">Colis</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'Panier' %}">
+                    <span class="icon">
+                        <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+                    </span>
+                    <span class="title">Panier</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'reexpedition' %}">
+                    <span class="icon">
+
+                        <i class="fa fa-plane" aria-hidden="true"></i>
+
+                    </span>
+                    <span class="title">Réexpédition</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icon">
+
+                        <i class="fa fa-address-card" aria-hidden="true"></i>
+
+                    </span>
+                    <span class="title">Boîte postale</span>
+                </a>
+            </li>
+
+            
+            <br>
+             <br>
+             <br>
+             <br>
+             <br>
+             <br>
+
+             
+            <li>
+                <a href="{% url 'compte' %}">
+                    <span class="icon">
+
+                        <i class="fa fa-user" aria-hidden="true"></i>
+
+                    </span>
+                    <span class="title">Compte</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">
+                    <span class="icon">
+
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+
+                    </span>
+                    <span class="title">Se déconnecter</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <!-- Sidebar (Navigation) remains unchanged -->
+
+    <div class="HistoriqueDesColis" style="left: 330px; top: 70px; position: absolute; color: #636363;
+              font-size: 23px; font-family: Poppins; font-weight: 600; word-wrap: break-word">Historique des paniers</div>
+
+    <div class="content historique-container" style="left: 310px; top: 120px; position: absolute; color: #131313; font-size: 25px;
+                  font-family: Poppins; font-weight: 600; word-wrap: break-word">
+        <table border="1" style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr>
+                    <th>N° Panier</th>
+                    <th>Numéro d'Agent</th>
+                    <th>Prix HT</th>
+                    <th>Prix TTC</th>
+                    <th>Status</th>
+                    <th>TVA</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.num_Panier }}</td>
+                    <td>{{ article.num_agent }}</td>
+                    <td>{{ article.prix_ht }}</td>
+                    <td>{{ article.prix_ttc }}</td>
+                    <td>{{ article.status }}</td>
+                    <td>{{ article.tva }}</td>
+                    <td>{{ article.date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">Aucun Panier trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
